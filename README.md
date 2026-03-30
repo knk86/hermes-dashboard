@@ -1,6 +1,6 @@
 # Hermes Dashboard
 
-A real-time web dashboard for managing and monitoring Hermes AI agents — built as a **Vercel serverless app** with **Supabase (Postgres)** as the database.
+A real-time web dashboard for managing and monitoring Hermes AI agents — built as a **Python server with SQLite**, deployable to any VPS or container platform.
 
 ## Features
 
@@ -9,71 +9,50 @@ A real-time web dashboard for managing and monitoring Hermes AI agents — built
 - Real-time agent status and resource monitoring
 - Dark/light/auto theme with Obsidian-style UI
 - Settings management
+- Full AI chat with real Hermes CLI (tmux-backed agents)
 
-## Deployment
+## Deploy to Railway
 
-**See [DEPLOY_VERCEL.md](./DEPLOY_VERCEL.md)** for step-by-step instructions.
+**See [DEPLOY_RAILWAY.md](./DEPLOY_RAILWAY.md)** for step-by-step instructions.
 
 Quick version:
 
-1. Create a Supabase project → run `supabase/schema.sql` in the SQL Editor
-2. Import this repo in Vercel
-3. Add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` as environment variables
+1. [railway.app](https://railway.app) → **New Project** → Deploy from GitHub repo → select `knk86/hermes-dashboard`
+2. Add a persistent disk at `/data`
+3. Set environment variables (see DEPLOY_RAILWAY.md)
 4. Deploy
 
 ## Tech Stack
 
-- **API**: Vercel Serverless Functions (TypeScript)
-- **Database**: Supabase Postgres
-- **Frontend**: Vanilla JS, CSS, Inter font, Obsidian-inspired theme
-- **AI Chat**: Demo stubs on serverless; real Hermes CLI on VPS/local
+- **Backend**: Pure Python stdlib (`http.server` + `aiosqlite`)
+- **Database**: SQLite (persistent disk on Railway)
+- **Frontend**: Vanilla JS, Inter font, Obsidian-inspired dark theme
+- **Deployment**: Railway, Render, Fly.io, or any VPS
 
 ## Project Structure
 
 ```
 hermes-dashboard/
-├── api/                    # Vercel serverless functions
-│   ├── lib/supabase.ts     # Supabase client
-│   ├── orgs.ts             # /api/orgs
-│   ├── settings.ts         # /api/settings
-│   ├── agents/
-│   │   ├── index.ts        # /api/agents
-│   │   └── [id]/
-│   │       ├── messages.ts # /api/agents/:id/messages
-│   │       ├── chat.ts     # /api/agents/:id/chat
-│   │       ├── resources.ts
-│   │       └── spawn.ts
-│   └── system/status.ts
-├── public/                 # Static frontend (served by Vercel)
-│   ├── index.html
-│   ├── css/
-│   └── js/
-├── supabase/
-│   └── schema.sql          # Postgres schema + seed data
-├── vercel.json
-├── package.json
-└── DEPLOY_VERCEL.md        # Full deployment guide
+├── server/
+│   ├── server.py      # Python HTTP API server
+│   └── schema.sql     # SQLite schema + seed data
+├── static/            # Frontend assets (dev)
+├── public/            # Frontend assets (prod)
+├── Procfile           # Railway/Render start command
+├── railway.toml       # Railway config
+├── requirements.txt
+└── DEPLOY_RAILWAY.md  # Step-by-step Railway guide
 ```
 
-## Development (Local)
-
-For full agent spawning and AI chat, run the **original Python server** locally:
+## Local Development
 
 ```bash
 git clone https://github.com/knk86/hermes-dashboard
 cd hermes-dashboard
-python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-
-# Point to your Supabase project
-export SUPABASE_URL=https://your-project.supabase.co
-export SUPABASE_SERVICE_ROLE_KEY=your-service-key
-export HERMES_PORT=8080
-
 python server/server.py
+# Visit http://localhost:8080
 ```
-
-Then visit `http://localhost:8080`.
 
 ## License
 
