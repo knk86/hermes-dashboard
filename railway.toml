@@ -1,3 +1,2 @@
 [deploy]
 startCommand = "python server/server.py"
-healthCheckPath = "/api/system/status"
