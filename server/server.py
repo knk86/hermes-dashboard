@@ -39,7 +39,8 @@ except ImportError:
 BASE_DIR = Path("/root/hermes-dashboard")
 STATIC_DIR = BASE_DIR / "static"
 SERVER_HOST = os.environ.get("HERMES_HOST", "0.0.0.0")
-SERVER_PORT = int(os.environ.get("HERMES_PORT", "8080"))
+# Deployment platforms (Railway, Render, Fly.io, etc.) set PORT; fall back to HERMES_PORT or 8080
+SERVER_PORT = int(os.environ.get("PORT") or os.environ.get("HERMES_PORT", "8080"))
 DB_PATH = BASE_DIR / "server" / "dashboard.db"
 SCHEMA_PATH = BASE_DIR / "server" / "schema.sql"
 
