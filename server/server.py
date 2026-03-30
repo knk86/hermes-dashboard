@@ -36,7 +36,9 @@ except ImportError:
     HAS_PSUTIL = False
 
 # Configuration
-BASE_DIR = Path("/root/hermes-dashboard")
+# Determine base directory relative to this script's location
+_SCRIPT_DIR = Path(__file__).resolve().parent
+BASE_DIR = _SCRIPT_DIR.parent
 STATIC_DIR = BASE_DIR / "static"
 SERVER_HOST = os.environ.get("HERMES_HOST", "0.0.0.0")
 # Deployment platforms (Railway, Render, Fly.io, etc.) set PORT; fall back to HERMES_PORT or 8080
