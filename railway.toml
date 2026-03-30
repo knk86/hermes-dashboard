@@ -1,7 +1,3 @@
-[build]
-builder = "python"
-buildCommand = "pip install -r requirements.txt"
-
 [deploy]
 startCommand = "python server/server.py"
 healthCheckPath = "/api/system/status"
